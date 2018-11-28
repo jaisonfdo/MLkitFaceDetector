@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FaceDetectionUtil.ScannerActivity"
+    tools:layout_editor_absoluteY="81dp">
+
+    <com.droidmentor.mlkitfacedetection.FaceDetectionUtil.common.CameraSourcePreview
+        android:id="@+id/preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.droidmentor.mlkitfacedetection.FaceDetectionUtil.common.GraphicOverlay
+            android:id="@+id/barcodeOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.droidmentor.mlkitfacedetection.FaceDetectionUtil.common.CameraSourcePreview>
+
+    <RelativeLayout
+        android:id="@+id/rlCapture"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/capture_overlay_size"
+        android:background="@color/cv_capture_bg"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/btnCapture"
+            android:layout_width="@dimen/capture_button_size"
+            android:layout_height="@dimen/capture_button_size"
+            android:layout_centerInParent="true"
+            android:enabled="false"
+            android:background="@drawable/button_effect" />
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

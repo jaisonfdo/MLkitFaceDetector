@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MLKitFaceDetection</string>
+    <string name="profile_item_email_header">Email</string>
+    <string name="profile_item_phone_header">Cellphone Number</string>
+    <string name="profile_item_password_header">Change Password</string>
+    <string name="profile_item_email_details">sample@gmail.com</string>
+    <string name="profile_item_phone_details">+1 40425 50505</string>
+    <string name="profile_item_password_details">Tap to change password</string>
+</resources>

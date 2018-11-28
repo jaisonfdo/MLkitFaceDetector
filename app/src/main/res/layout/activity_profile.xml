@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity"
+    tools:ignore="MissingConstraints">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ivProfile"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_height="100dp"
+        android:layout_width="100dp"
+        android:src="@drawable/ic_avatar"/>
+
+    <ImageView
+        android:id="@+id/ivEmail"
+        style="@style/profile_item_icon"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/ic_email"
+        app:layout_constraintTop_toBottomOf="@+id/ivProfile" />
+
+    <TextView
+        android:id="@+id/tvEmailHeader"
+        style="@style/profile_item_header"
+        android:text="@string/profile_item_email_header"
+        app:layout_constraintStart_toEndOf="@+id/ivEmail"
+        app:layout_constraintTop_toTopOf="@+id/ivEmail" />
+
+    <TextView
+        android:id="@+id/tvEmail"
+        style="@style/profile_item_details"
+        android:text="@string/profile_item_email_details"
+        app:layout_constraintStart_toEndOf="@+id/ivEmail"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmailHeader" />
+
+    <ImageView
+        android:id="@+id/ivPhone"
+        style="@style/profile_item_icon"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_phone"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmail" />
+
+    <TextView
+        android:id="@+id/tvPhoneHeader"
+        style="@style/profile_item_header"
+        android:text="@string/profile_item_phone_header"
+        app:layout_constraintStart_toEndOf="@+id/ivPhone"
+        app:layout_constraintTop_toTopOf="@+id/ivPhone" />
+
+    <TextView
+        android:id="@+id/tvPhone"
+        style="@style/profile_item_details"
+        android:text="@string/profile_item_phone_details"
+        app:layout_constraintStart_toEndOf="@+id/ivPhone"
+        app:layout_constraintTop_toBottomOf="@+id/tvPhoneHeader" />
+
+    <ImageView
+        android:id="@+id/ivChangePassword"
+        style="@style/profile_item_icon"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_change_password"
+        app:layout_constraintTop_toBottomOf="@+id/tvPhone" />
+
+    <TextView
+        android:id="@+id/tvChangePasswordHeader"
+        style="@style/profile_item_header"
+        android:text="@string/profile_item_password_header"
+        app:layout_constraintStart_toEndOf="@+id/ivChangePassword"
+        app:layout_constraintTop_toTopOf="@+id/ivChangePassword" />
+
+    <TextView
+        android:id="@+id/tvChangePassword"
+        style="@style/profile_item_details"
+        android:text="@string/profile_item_password_details"
+        app:layout_constraintStart_toEndOf="@+id/ivChangePassword"
+        app:layout_constraintTop_toBottomOf="@+id/tvChangePasswordHeader" />
+
+</android.support.constraint.ConstraintLayout>
