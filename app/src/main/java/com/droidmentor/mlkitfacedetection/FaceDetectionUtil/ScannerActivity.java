@@ -22,6 +22,7 @@ import com.droidmentor.mlkitfacedetection.FaceDetectionUtil.common.CameraSourceP
 import com.droidmentor.mlkitfacedetection.FaceDetectionUtil.common.FrameMetadata;
 import com.droidmentor.mlkitfacedetection.FaceDetectionUtil.common.GraphicOverlay;
 import com.droidmentor.mlkitfacedetection.R;
+import com.droidmentor.mlkitfacedetection.Utils.Imageutils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.ml.vision.FirebaseVision;
@@ -29,7 +30,7 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFace;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -63,6 +64,8 @@ public class ScannerActivity extends AppCompatActivity {
     FaceCenterCrop faceCenterCrop;
     FaceCenterCropListener faceCenterCropListener;
 
+    boolean isComplete;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +96,6 @@ public class ScannerActivity extends AppCompatActivity {
         FirebaseVisionFaceDetectorOptions options =
                 new FirebaseVisionFaceDetectorOptions.Builder()
                         .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
-                        .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CONTOURS)
                         .enableTracking()
                         .build();
 
@@ -102,9 +104,10 @@ public class ScannerActivity extends AppCompatActivity {
         // To connect the camera resource with the detector
 
         mCameraSource = new CameraSource(this, barcodeOverlay);
-        mCameraSource.setFacing(CameraSource.CAMERA_FACING_FRONT);
+        mCameraSource.setFacing(CameraSource.CAMERA_FACING_BACK);
 
-        //FaceContourDetectorProcessor faceDetectionProcessor = new FaceContourDetectorProcessor(detector);
+
+        // FaceContourDetectorProcessor faceDetectionProcessor = new FaceContourDetectorProcessor(detector);
 
         faceDetectionProcessor = new FaceDetectionProcessor(detector);
         faceDetectionProcessor.setFaceDetectionResultListener(getFaceDetectionListener());
@@ -119,34 +122,34 @@ public class ScannerActivity extends AppCompatActivity {
             faceDetectionResultListener = new FaceDetectionResultListener() {
                 @Override
                 public void onSuccess(@Nullable Bitmap originalCameraImage, @NonNull List<FirebaseVisionFace> faces, @NonNull FrameMetadata frameMetadata, @NonNull GraphicOverlay graphicOverlay) {
-                    boolean isEnable;
-                    isEnable = faces.size() > 0;
+                       boolean isEnable;
+                       isEnable = faces.size() > 0;
 
-                    for (FirebaseVisionFace face : faces)
-                    {
+                       for (FirebaseVisionFace face : faces)
+                       {
 
-                        // To get the results
+                           // To get the results
 
-                        Log.d(TAG, "Face bounds : " + face.getBoundingBox());
+                           Log.d(TAG, "Face bounds : " + face.getBoundingBox());
 
-                        // To get this, we have to set the ClassificationMode attribute as ALL_CLASSIFICATIONS
+                           // To get this, we have to set the ClassificationMode attribute as ALL_CLASSIFICATIONS
 
-                        Log.d(TAG, "Left eye open probability : " + face.getLeftEyeOpenProbability());
-                        Log.d(TAG, "Right eye open probability : " + face.getRightEyeOpenProbability());
-                        Log.d(TAG, "Smiling probability : " + face.getSmilingProbability());
+                           Log.d(TAG, "Left eye open probability : " + face.getLeftEyeOpenProbability());
+                           Log.d(TAG, "Right eye open probability : " + face.getRightEyeOpenProbability());
+                           Log.d(TAG, "Smiling probability : " + face.getSmilingProbability());
 
-                        // To get this, we have to enableTracking
+                           // To get this, we have to enableTracking
 
-                        Log.d(TAG, "Face ID : " + face.getTrackingId());
+                           Log.d(TAG, "Face ID : " + face.getTrackingId());
 
-                    }
+                       }
 
-                    runOnUiThread(() -> {
-                        Log.d(TAG, "button enable true ");
-                        bmpCapturedImage = originalCameraImage;
-                        capturedFaces = faces;
-                        btnCapture.setEnabled(isEnable);
-                    });
+                       runOnUiThread(() -> {
+                           Log.d(TAG, "button enable true ");
+                           bmpCapturedImage = originalCameraImage;
+                           capturedFaces = faces;
+                           btnCapture.setEnabled(isEnable);
+                       });
                 }
 
                 @Override
@@ -199,6 +202,7 @@ public class ScannerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume: ");
         startCameraSource();
     }
 
@@ -210,11 +214,6 @@ public class ScannerActivity extends AppCompatActivity {
         super.onPause();
         if (preview != null)
             preview.stop();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
     }
 
     /**
@@ -252,29 +251,32 @@ public class ScannerActivity extends AppCompatActivity {
     };
 
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-    }
-
-
     private FaceCenterCropListener getFaceCropResult() {
         if (faceCenterCropListener == null)
             faceCenterCropListener = new FaceCenterCropListener() {
                 @Override
                 public void onTransform(Bitmap updatedBitmap) {
 
-                    Log.d(TAG, "onTransform: ");
-                    //Convert to byte array
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bmpCapturedImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
 
-                    Intent currentIntent = getIntent();
-                    currentIntent.putExtra("image",byteArray);
-                    setResult(RESULT_OK, currentIntent);
-                    finish();
+                    Log.d(TAG, "onTransform: ");
+
+                    try
+                    {
+                        File capturedFile = new File(getFilesDir(), "newImage.jpg");
+
+                        Imageutils imageutils=new Imageutils(ScannerActivity.this);
+                        imageutils.store_image(capturedFile, updatedBitmap);
+
+                        Intent currentIntent = getIntent();
+                        currentIntent.putExtra("image",capturedFile.getAbsolutePath());
+                        setResult(RESULT_OK, currentIntent);
+                        finish();
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
 
                 }
 

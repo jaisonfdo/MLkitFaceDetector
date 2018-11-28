@@ -38,6 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     ProgressUtils progressUtils;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -115,7 +115,7 @@ public class FaceCenterCrop {
             if (faceCenterCropListener != null)
                 faceCenterCropListener.onTransform(result);
 
-            original.recycle();
+          //  original.recycle();
 
         } else {
             if (faceCenterCropListener != null)

@@ -41,7 +41,7 @@ import static com.droidmentor.mlkitfacedetection.Utils.FaceDetectionScanner.Cons
 
 /** Preview the camera image in the screen. */
 public class CameraSourcePreview extends ViewGroup {
-  private static final String TAG = "MIDemoApp:Preview";
+  private static final String TAG = "CameraSourcePreview";
 
   private Context context;
   private SurfaceView surfaceView;

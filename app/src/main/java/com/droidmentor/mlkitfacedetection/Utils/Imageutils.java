@@ -22,6 +22,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -61,7 +62,7 @@ public class Imageutils {
         this.current_activity = act;
     }
 
-    public Imageutils(Activity act,ImageAttachmentListener imageAttachmentListener) {
+    public Imageutils(Activity act, ImageAttachmentListener imageAttachmentListener) {
 
         this.context = act;
         this.current_activity = act;
@@ -594,15 +595,19 @@ public class Imageutils {
         switch (requestCode) {
             case SCANNER_REQUEST_CODE:
 
-                if (resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK && !TextUtils.isEmpty(data.getStringExtra("image"))) {
 
                     Log.i("Camera Selected", "Photo");
 
                     try {
 
-                        byte[] byteArray = data.getByteArrayExtra("image");
-                        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-                        imageAttachment_callBack.image_attachment(SCANNER_REQUEST_CODE, "captured_image", bmp, imageUri);
+                        String imagePath = data.getStringExtra("image");
+                        File imgFile = new File(imagePath);
+
+                        Bitmap bmp = getImage(imgFile);
+
+                        if (bmp != null)
+                            imageAttachment_callBack.image_attachment(SCANNER_REQUEST_CODE, "captured_image", bmp, imageUri);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -622,15 +627,14 @@ public class Imageutils {
                         selected_path = null;
                         selected_path = getPath(selectedImage);
 
-                        Log.d(TAG, "onActivityResult: "+selected_path);
+                        Log.d(TAG, "onActivityResult: " + selected_path);
                         file_name = selected_path.substring(selected_path.lastIndexOf("/") + 1);
-                        bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(),selectedImage);
+                        bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), selectedImage);
                         Log.d("Time log", "got bitmap: ");
                         imageAttachment_callBack.image_attachment(GALEERY_REQUEST_CODE, file_name, bitmap, selectedImage);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
 
                 }
                 break;
@@ -733,6 +737,25 @@ public class Imageutils {
             return null;
     }
 
+    public Bitmap getImage(File selectedFile) {
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        options.inSampleSize = 2;
+        options.inTempStorage = new byte[16 * 1024];
+
+        if (!selectedFile.exists())
+            return null;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(selectedFile.getAbsolutePath(), options);
+
+        if (bitmap != null)
+            return bitmap;
+        else
+            return null;
+    }
+
+
     /**
      * Create an image
      *
@@ -774,7 +797,7 @@ public class Imageutils {
     public void store_image(File file, Bitmap bmp) {
         try {
             FileOutputStream out = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.PNG, 80, out);
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
 
