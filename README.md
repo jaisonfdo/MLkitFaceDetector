@@ -1,4 +1,5 @@
 # MLkitFaceDetector
+Best project
 
 Sample project to explain the barcode Face detection API from Firebase MLKit
 
